@@ -1,6 +1,7 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
 from src.item import Item
 from src.phone import Phone
+from src.keyboard import Keyboard, Mix
 
 
 def test_class_item():
@@ -34,6 +35,7 @@ def test_item_add():
     assert item1 + phone1 == 25
     assert phone1 + phone1 == 10
 
+
 def test_phone_repr():
     phone1 = Phone("iPhone 14", 120_000, 5, 2)
     assert repr(phone1) == "Phone('iPhone 14', 120000, 5, 2)"
@@ -42,3 +44,17 @@ def test_phone_repr():
 def test_number_of_sim():
     phone1 = Phone("iPhone 14", 120_000, 5, 2)
     phone1.number_of_sim = 1
+
+
+def test_keyboard_repr():
+    kb = Keyboard('Dark Project KD87A', 9600, 5)
+    assert repr(kb) == "Keyboard('Dark Project KD87A', 9600, 5)"
+
+
+def test_change_language():
+    kb = Keyboard('Dark Project KD87A', 9600, 5)
+    assert str(kb.language) == "EN"
+    kb.change_lang()
+    assert str(kb.language) == "RU"
+    kb.change_lang().change_lang()
+    assert str(kb.language) == "RU"
