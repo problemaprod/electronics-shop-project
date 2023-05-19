@@ -1,6 +1,28 @@
 import csv
 
 
+def check_csvfile():
+    """
+    Проверка csv файла
+    """
+    with open("../src/items.csv", newline='', encoding='windows-1251') as csvfile:
+        if len(list(csv.reader(csvfile))[0]) != 3:
+            return False
+        return True
+
+
+class InstantiateCSVError(Exception):
+    """
+    класс с исключением
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.massage = args[0] if args else "Файл поврежден"
+
+    def __str__(self):
+        return self.massage
+
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -63,14 +85,22 @@ class Item:
     @classmethod
     def instantiate_from_csv(cls):
         item_list = []
-        with open("../src/items.csv", newline='', encoding='windows-1251') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                name = row['name']
-                price = row['price']
-                quantity = int(row['quantity'])
-                item_list.append(Item(name, price, quantity))
-            cls.all = item_list
+
+        try:
+            with open("../src/items.csv", newline='', encoding='windows-1251') as csvfile:
+                reader = csv.DictReader(csvfile)
+                if check_csvfile() == False:
+                    raise InstantiateCSVError("Файл items.csv поврежден")
+                else:
+                    csvfile.seek(0)
+                    for row in reader:
+                        name = row['name']
+                        price = row['price']
+                        quantity = int(row['quantity'])
+                        item_list.append(Item(name, price, quantity))
+                    cls.all = item_list
+        except FileNotFoundError:
+            print("Отсутствует файл item.csv")
 
     @staticmethod
     def string_to_number(number):
@@ -78,3 +108,6 @@ class Item:
             i = number.find(".")
             return int(number[0:i])
         return int(number[0])
+
+
+Item.instantiate_from_csv()
