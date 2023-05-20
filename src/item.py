@@ -16,11 +16,9 @@ class InstantiateCSVError(Exception):
     класс с исключением
     """
 
-    def __init__(self, *args, **kwargs):
-        self.massage = args[0] if args else "Файл поврежден"
-
-    def __str__(self):
-        return self.massage
+    def __init__(self, massage):
+        self.massage = massage
+        super().__init__(self.massage)
 
 
 class Item:
